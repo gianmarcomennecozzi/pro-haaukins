@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+service Store {
+    //Insert
+    rpc AddEvent (AddEventRequest) returns (InsertResponse) {}
+    rpc AddTeam (AddTeamRequest) returns (InsertResponse) {}
+
+    //Select
+    rpc GetEvents (Empty) returns (GetEventResponse) {}
+    rpc GetEventTeams (GetEventTeamsRequest) returns (GetEventTeamsResponse) {}
+
+    //Update
+}
+
+message Empty {}
+
+message AddEventRequest{
+    string name = 1;
+    string tag = 2;
+    string frontends = 3;
+    string exercises = 4;
+    int32 available = 5;
+    int32 capacity = 6;
+    string expectedFinishTime = 7;
+}
+
+message AddTeamRequest{
+    string id = 1;
+    string event_tag = 2;
+    string email = 3;
+    string name = 4;
+    string password = 5;
+}
+
+message InsertResponse{
+    string Message = 1;
+    string errorMessage = 2;
+}
+
+message GetEventResponse{
+    message Events {
+        string name = 1;
+        string tag = 2;
+        string frontends = 3;
+        string exercises = 4;
+        int32 available = 5;
+        int32 capacity = 6;
+        string startedAt = 7;
+        string expectedFinishTime = 8;
+        string finishedAt = 9;
+    }
+    repeated Events events = 1;
+    string errorMessage = 2;
+}
+
+message GetEventTeamsRequest{
+    string eventTag = 1;
+}
+
+message GetEventTeamsResponse{
+    message Teams{
+        string id = 1;
+        string email = 2;
+        string name = 3;
+        string createdAt = 4;
+        string last_access = 5;
+        string solved_challenges = 6;
+    }
+    repeated Teams teams = 1;
+    string errorMessage = 2;
+}
