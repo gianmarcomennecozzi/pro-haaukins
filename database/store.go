@@ -3,19 +3,15 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"github.com/gianmarcomennecozzi/pro-haaukins/model"
 	pb "github.com/gianmarcomennecozzi/pro-haaukins/proto"
+	"log"
+	"os"
+	"strconv"
 	"sync"
 	"time"
-	"github.com/gianmarcomennecozzi/pro-haaukins/model"
 )
-const (
-	HOST		= "127.0.0.1"
-	POST		= 5432
-	DB_USER     = "root"
-	DB_PASSWORD = "root"
-	DB_NAME     = "mydb"
-)
+
 
 type store struct {
 	m sync.Mutex
@@ -31,16 +27,33 @@ type Store interface {
 
 func NewStore() (Store, error){
 	db, err := NewDBConnection()
+
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)
+	}
+	err = InitTables(db)
+	if err != nil {
+		log.Printf("failed to init tables: %v", err)
 	}
 	return &store{ db: db }, nil
 }
 
 func NewDBConnection() (*sql.DB, error){
+
+	host 		:= os.Getenv("DB_HOST")
+	portString	:= os.Getenv("DB_PORT")
+	dbUser     := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName     := os.Getenv("DB_NAME")
+
+	port, err := strconv.Atoi(portString)
+	if err != nil {
+		return nil, err
+	}
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
-		HOST, POST, DB_USER, DB_PASSWORD, DB_NAME)
+		host, port, dbUser, dbPassword, dbName)
 	db, err := sql.Open("postgres", psqlInfo)
 
 

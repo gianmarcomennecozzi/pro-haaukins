@@ -35,7 +35,7 @@ func main(){
 	//	ExpectedFinishTime:   "wadwad wdawadwadwa  awdadwad adwd",
 	//}
 
-	r, err := c.GetEventTeams(ctx, &pb.GetEventTeamsRequest{EventTag: "test"})
+	r, err := c.GetEventTeams(ctx, &pb.GetEventTeamsRequest{EventTag: "menne"})
 	if err != nil{
 		log.Fatalf("could not greet: %v", err)
 	}

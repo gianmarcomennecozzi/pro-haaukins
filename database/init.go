@@ -2,6 +2,19 @@ package database
 
 import "database/sql"
 
+func InitTables(db *sql.DB) error{
+	if _, err := createTables(db); err != nil {
+		return err
+	}
+	if _, err := addEvent(db); err != nil {
+		return err
+	}
+	if _, err := addTeam(db); err != nil {
+		return err
+	}
+	return nil
+}
+
 func addEvent(db *sql.DB) (string, error){
 	addEventQuery := "INSERT INTO event (tag, name, available, capacity, frontends, exercises, started_at, finish_expected)" +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
@@ -20,9 +33,11 @@ func addEvent(db *sql.DB) (string, error){
 func addTeam(db *sql.DB) (string, error){
 	addTeamQuery := "INSERT INTO team (id, event_tag, email, name, password, created_at, last_access, solved_challenges)" +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
+	created_at := "2020-03-24T13:57:40.323156782+01:00"
+	last_access := "2020-04-08T13:57:40.323156782+02:00"
 	solvedChallenges := `[{"tag": "dwada","completed-at": "2020-03-24T14:23:21.102Z"},{"tag": "merlo","completed-at": "2020-03-24T14:23:21.102Z"}]`
 
-	_, err := db.Exec(addTeamQuery, "1234wdad567", "test", "test@test.dk", "testttttt", "ciao", "dwa", "dwad", solvedChallenges)
+	_, err := db.Exec(addTeamQuery, "its_working", "menne", "test@test.dk", "testttttt", "ciao", created_at, last_access, solvedChallenges)
 	if err != nil {
 		return "", err
 	}
