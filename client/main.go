@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	pb "pro-haaukins/proto"
+	pb "github.com/gianmarcomennecozzi/pro-haaukins/proto"
 )
 
 const (

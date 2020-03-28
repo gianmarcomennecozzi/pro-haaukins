@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	pb "pro-haaukins/proto"
+	pb "github.com/gianmarcomennecozzi/pro-haaukins/proto"
 	"sync"
 	"time"
-	"pro-haaukins/model"
+	"github.com/gianmarcomennecozzi/pro-haaukins/model"
 )
 const (
 	HOST		= "127.0.0.1"
