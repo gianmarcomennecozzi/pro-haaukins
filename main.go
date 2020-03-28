@@ -19,13 +19,21 @@ type server struct {
 	store database.Store
 }
 
+func (s server) AddEvent(ctx context.Context, in *pb.AddEventRequest) (*pb.InsertResponse, error) {
+	result, err := s.store.AddEvent(in)
+	if err != nil {
+		return &pb.InsertResponse{ErrorMessage: err.Error()}, nil
+	}
+	return &pb.InsertResponse{ Message: result }, nil
 
-func (s server) AddEvent(context.Context, *pb.AddEventRequest) (*pb.InsertResponse, error) {
-	panic("implement me")
 }
 
-func (s server) AddTeam(context.Context, *pb.AddTeamRequest) (*pb.InsertResponse, error) {
-	panic("implement me")
+func (s server) AddTeam(ctx context.Context, in *pb.AddTeamRequest) (*pb.InsertResponse, error) {
+	result, err := s.store.AddTeam(in)
+	if err != nil {
+		return &pb.InsertResponse{ErrorMessage: err.Error()}, nil
+	}
+	return &pb.InsertResponse{Message: result}, nil
 }
 
 func (s server) GetEvents(context.Context, *pb.Empty) (*pb.GetEventResponse, error) {
