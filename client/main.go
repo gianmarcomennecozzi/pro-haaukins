@@ -35,14 +35,28 @@ func main(){
 	//	ExpectedFinishTime:   "wadwad wdawadwadwa  awdadwad adwd",
 	//}
 
-	r, err := c.GetEventTeams(ctx, &pb.GetEventTeamsRequest{EventTag: "menne"})
+	//addTeam := pb.AddTeamRequest{
+	//	Id:                   "menne",
+	//	EventTag:             "test",
+	//	Email:                "menne",
+	//	Name:                 "menne",
+	//	Password:             "menne",
+	//}
+	//r, err := c.AddTeam(ctx, &addTeam)
+
+	r, err := c.UpdateTeamSolvedChallenge(ctx, &pb.UpdateTeamSolvedChallengeRequest{
+		TeamId:               "menne2",
+		Tag:                  "prova",
+		CompletedAt:          "prova time",
+	})
 	if err != nil{
 		log.Fatalf("could not greet: %v", err)
 	}
 	if r.ErrorMessage != ""{
-		log.Fatalf("could not greet: %v", r.ErrorMessage)
+		log.Fatalf("my could not greet: %v", r.ErrorMessage)
 	}
-	for _, e := range r.Teams{
-		log.Printf(e.Id)
-	}
+	log.Println(r.Message)
+	//for _, e := range r.Message{
+	//	log.Printf(e.Id)
+	//}
 }

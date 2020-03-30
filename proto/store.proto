@@ -10,6 +10,9 @@ service Store {
     rpc GetEventTeams (GetEventTeamsRequest) returns (GetEventTeamsResponse) {}
 
     //Update
+    rpc UpdateEventFinishDate (UpdateEventRequest) returns (UpdateResponse) {}
+    rpc UpdateTeamSolvedChallenge (UpdateTeamSolvedChallengeRequest) returns (UpdateResponse) {}
+    rpc UpdateTeamLastAccess (UpdateTeamLastAccessRequest) returns (UpdateResponse) {}
 }
 
 message Empty {}
@@ -67,5 +70,26 @@ message GetEventTeamsResponse{
         string solved_challenges = 6;
     }
     repeated Teams teams = 1;
+    string errorMessage = 2;
+}
+
+message UpdateEventRequest{
+    string eventId = 1;
+    string finishedAt = 2;
+}
+
+message UpdateTeamSolvedChallengeRequest{
+    string teamId = 1;
+    string tag = 2;
+    string completedAt = 3;
+}
+
+message UpdateTeamLastAccessRequest{
+    string teamId = 1;
+    string accessAt = 2;
+}
+
+message UpdateResponse{
+    string Message = 1;
     string errorMessage = 2;
 }

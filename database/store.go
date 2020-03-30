@@ -2,6 +2,8 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gianmarcomennecozzi/pro-haaukins/model"
 	pb "github.com/gianmarcomennecozzi/pro-haaukins/proto"
@@ -23,6 +25,9 @@ type Store interface {
 	AddTeam(*pb.AddTeamRequest) (string, error)
 	GetEvents() ([]model.Event, error)
 	GetTeams(string) ([]model.Team, error)
+	UpdateTeamSolvedChallenge(*pb.UpdateTeamSolvedChallengeRequest) (string, error)
+	UpdateTeamLastAccess(*pb.UpdateTeamLastAccessRequest) (string, error)
+	UpdateEventFinishDate(*pb.UpdateEventRequest) (string, error)
 }
 
 func NewStore() (Store, error){
@@ -45,6 +50,12 @@ func NewDBConnection() (*sql.DB, error){
 	dbUser     := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName     := os.Getenv("DB_NAME")
+
+	//host 		:= "localhost"
+	//portString	:= "5432"
+	//dbUser     := "root"
+	//dbPassword := "root"
+	//dbName     := "mydb"
 
 	port, err := strconv.Atoi(portString)
 	if err != nil {
@@ -90,10 +101,10 @@ func (s store) AddTeam(in *pb.AddTeamRequest) (string, error){
 
 	now := time.Now()
 	nowString := now.Format("2006-01-02 15:04:05")
-	addTeamQuery := "INSERT INTO team (id, event_tag, email, name, password, created_at, last_access)" +
+	addTeamQuery := "INSERT INTO team (id, event_tag, email, name, password, created_at, last_access, solved_challenges)" +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
 
-	_, err := s.db.Exec(addTeamQuery, in.Id, in.EventTag, in.Email, in.Name, in.Password, nowString, nowString)
+	_, err := s.db.Exec(addTeamQuery, in.Id, in.EventTag, in.Email, in.Name, in.Password, nowString, nowString, "[]")
 	if err != nil {
 		return "", err
 	}
@@ -170,4 +181,69 @@ func (s store) GetTeams(tag string) ([]model.Team, error) {
 		})
 	}
 	return teams, nil
+}
+
+func (s store) UpdateTeamSolvedChallenge(in *pb.UpdateTeamSolvedChallengeRequest) (string, error) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	type Challenge struct {
+		Tag  		string		`json:"tag"`
+		CompletedAt string		`json:"completed-at"`
+	}
+
+	var solvedChallenges []Challenge
+	var solvedChallengesDB string
+
+	if err := s.db.QueryRow("SELECT solved_challenges FROM team WHERE id=$1", in.TeamId).Scan(&solvedChallengesDB); err != nil {
+		return "", err
+	}
+
+	if err := json.Unmarshal([]byte(solvedChallengesDB), &solvedChallenges); err != nil{
+		return "", err
+	}
+
+	for _, sc := range solvedChallenges{
+		if sc.Tag == in.Tag{
+			return "", errors.New("challenge already solved")
+		}
+	}
+
+	solvedChallenges = append(solvedChallenges, Challenge{
+		Tag:         in.Tag,
+		CompletedAt: in.CompletedAt,
+	})
+
+	newSolvedChallengesDB, _ := json.Marshal(solvedChallenges)
+
+	_, err := s.db.Exec("UPDATE team SET solved_challenges = $2 WHERE id = $1", in.TeamId, string(newSolvedChallengesDB))
+	if err != nil {
+		return "", err
+	}
+
+	return "ok", nil
+}
+
+func (s store) UpdateTeamLastAccess(in *pb.UpdateTeamLastAccessRequest) (string, error) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	_, err := s.db.Exec("UPDATE team SET last_access = $2 WHERE id = $1", in.TeamId, in.AccessAt)
+	if err != nil {
+		return "", err
+	}
+
+	return "ok", nil
+}
+
+func (s store) UpdateEventFinishDate(in *pb.UpdateEventRequest) (string, error) {
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	_, err := s.db.Exec("UPDATE event SET finished_at = $2 WHERE id = $1", in.EventId, in.FinishedAt)
+	if err != nil {
+		return "", err
+	}
+
+	return "ok", nil
 }

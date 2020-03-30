@@ -6,12 +6,12 @@ func InitTables(db *sql.DB) error{
 	if _, err := createTables(db); err != nil {
 		return err
 	}
-	if _, err := addEvent(db); err != nil {
-		return err
-	}
-	if _, err := addTeam(db); err != nil {
-		return err
-	}
+	//if _, err := addEvent(db); err != nil {
+	//	fmt.Println("error init add event")
+	//}
+	//if _, err := addTeam(db); err != nil {
+	//	fmt.Println("error init add team")
+	//}
 	return nil
 }
 
@@ -47,7 +47,7 @@ func addTeam(db *sql.DB) (string, error){
 func createTables(db *sql.DB) (string, error){
 
 	//Create Event Table
-	eventTableQuery := "create table Event(" +
+	eventTableQuery := "CREATE TABLE IF NOT EXISTS Event(" +
 		"tag varchar (50) primary key, " +
 		"name varchar (150), " +
 		"available integer, " +
@@ -62,7 +62,7 @@ func createTables(db *sql.DB) (string, error){
 	}
 
 	//Create Teams Table
-	teamsTableQuery := "create table Team(" +
+	teamsTableQuery := "CREATE TABLE IF NOT EXISTS Team(" +
 		"id varchar (50) primary key, " +
 		"event_tag varchar (50), " +
 		"email varchar (50), " +

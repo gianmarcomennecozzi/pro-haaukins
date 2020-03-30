@@ -82,6 +82,30 @@ func (s server) GetEventTeams(ctx context.Context,in *pb.GetEventTeamsRequest) (
 	return &pb.GetEventTeamsResponse{Teams:teams}, nil
 }
 
+func (s server) UpdateEventFinishDate(ctx context.Context, in *pb.UpdateEventRequest) (*pb.UpdateResponse, error) {
+	result, err := s.store.UpdateEventFinishDate(in)
+	if err != nil {
+		return &pb.UpdateResponse{ErrorMessage: err.Error()}, nil
+	}
+	return &pb.UpdateResponse{Message: result}, nil
+}
+
+func (s server) UpdateTeamSolvedChallenge(ctx context.Context, in *pb.UpdateTeamSolvedChallengeRequest) (*pb.UpdateResponse, error) {
+ 	result, err := s.store.UpdateTeamSolvedChallenge(in)
+ 	if err != nil {
+ 		return &pb.UpdateResponse{ErrorMessage: err.Error()}, nil
+	}
+	return &pb.UpdateResponse{Message: result}, nil
+}
+
+func (s server) UpdateTeamLastAccess(ctx context.Context, in *pb.UpdateTeamLastAccessRequest) (*pb.UpdateResponse, error) {
+	result, err := s.store.UpdateTeamLastAccess(in)
+	if err != nil {
+		return &pb.UpdateResponse{ErrorMessage: err.Error()}, nil
+	}
+	return &pb.UpdateResponse{Message: result}, nil
+}
+
 func main() {
 	store, err := database.NewStore()
 	if err != nil {
