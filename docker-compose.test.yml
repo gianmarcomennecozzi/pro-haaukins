@@ -1,0 +1,43 @@
+version: '3'
+services:
+  server_test:
+    container_name: server_test
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST_TEST}
+      - DB_PORT=${DB_PORT}
+    build:
+      context: .
+      dockerfile: ./Dockerfile.test
+    ports:
+      - 50051:50051
+    depends_on:
+      - postgres-db_test
+    networks:
+      - internal_test
+
+
+  postgres-db_test:
+    image: postgres:latest
+    container_name: postgres_test
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST_TEST}
+    ports:
+      - '5432:5432'
+    volumes:
+      - database_postgres_test:/var/lib/postgresql/data
+    networks:
+      - internal_test
+
+volumes:
+  database_postgres_test:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  internal_test:
+    driver: bridge
