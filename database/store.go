@@ -83,11 +83,9 @@ func (s store) AddEvent(in *pb.AddEventRequest) (string, error) {
 	s.m.Lock()
 	defer s.m.Unlock()
 
-	now := time.Now()
-	nowString := now.Format("2006-01-02 15:04:05")
 	addEventQuery := "INSERT INTO event (tag, name, available, capacity, frontends, exercises, started_at, finish_expected)" +
 		"VALUES ($1, $2, $3, $4, $5, $6, $7, $8)"
-	_, err := s.db.Exec(addEventQuery, in.Tag, in.Name, in.Available, in.Capacity, in.Frontends, in.Exercises, nowString, in.ExpectedFinishTime)
+	_, err := s.db.Exec(addEventQuery, in.Tag, in.Name, in.Available, in.Capacity, in.Frontends, in.Exercises, in.StartTime, in.ExpectedFinishTime)
 
 	if err != nil {
 		return "", err
@@ -131,7 +129,7 @@ func (s store) GetEvents() ([]model.Event, error) {
 		var startedAt			string
 		var expectedFinishTime 	string
 		var finishedAt			string
-		rows.Scan(&tag, &name, &frontends, &exercises, &available, &capacity, &startedAt, &expectedFinishTime, &finishedAt)
+		rows.Scan(&tag, &name, &available, &capacity, &frontends, &exercises, &startedAt, &expectedFinishTime, &finishedAt)
 		events = append(events, model.Event{
 			Tag:                tag,
 			Name:               name,

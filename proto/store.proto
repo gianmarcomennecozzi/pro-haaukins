@@ -6,7 +6,7 @@ service Store {
     rpc AddTeam (AddTeamRequest) returns (InsertResponse) {}
 
     //Select
-    rpc GetEvents (Empty) returns (GetEventResponse) {}
+    rpc GetEvents (EmptyRequest) returns (GetEventResponse) {}
     rpc GetEventTeams (GetEventTeamsRequest) returns (GetEventTeamsResponse) {}
 
     //Update
@@ -15,7 +15,7 @@ service Store {
     rpc UpdateTeamLastAccess (UpdateTeamLastAccessRequest) returns (UpdateResponse) {}
 }
 
-message Empty {}
+message EmptyRequest {}
 
 message AddEventRequest{
     string name = 1;
@@ -24,7 +24,8 @@ message AddEventRequest{
     string exercises = 4;
     int32 available = 5;
     int32 capacity = 6;
-    string expectedFinishTime = 7;
+    string startTime = 7;
+    string expectedFinishTime = 8;
 }
 
 message AddTeamRequest{
@@ -65,9 +66,10 @@ message GetEventTeamsResponse{
         string id = 1;
         string email = 2;
         string name = 3;
-        string createdAt = 4;
-        string last_access = 5;
-        string solved_challenges = 6;
+        string hashPassword = 4;
+        string createdAt = 5;
+        string last_access = 6;
+        string solved_challenges = 7;
     }
     repeated Teams teams = 1;
     string errorMessage = 2;

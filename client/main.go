@@ -35,20 +35,21 @@ func main(){
 	//	ExpectedFinishTime:   "wadwad wdawadwadwa  awdadwad adwd",
 	//}
 
-	//addTeam := pb.AddTeamRequest{
-	//	Id:                   "menne",
-	//	EventTag:             "test",
-	//	Email:                "menne",
-	//	Name:                 "menne",
-	//	Password:             "menne",
-	//}
-	//r, err := c.AddTeam(ctx, &addTeam)
+	addTeam := pb.AddTeamRequest{
+		Id:                   "its_working",
+		EventTag:             "menne",
+		Email:                "menne@menne.com",
+		Name:                 "menne",
+		Password:             "menne_token_test",
+	}
+	r, err := c.AddTeam(ctx, &addTeam)
 
-	r, err := c.UpdateTeamSolvedChallenge(ctx, &pb.UpdateTeamSolvedChallengeRequest{
-		TeamId:               "menne2",
-		Tag:                  "prova",
-		CompletedAt:          "prova time",
-	})
+	//r, err := c.UpdateTeamSolvedChallenge(ctx, &pb.UpdateTeamSolvedChallengeRequest{
+	//	TeamId:               "menne2",
+	//	Tag:                  "prova",
+	//	CompletedAt:          "prova time",
+	//})
+	//r, err := c.GetEvents(ctx, &pb.EmptyRequest{})
 	if err != nil{
 		log.Fatalf("could not greet: %v", err)
 	}
