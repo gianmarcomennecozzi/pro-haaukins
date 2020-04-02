@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -35,29 +36,29 @@ func main(){
 	//	ExpectedFinishTime:   "wadwad wdawadwadwa  awdadwad adwd",
 	//}
 
-	addTeam := pb.AddTeamRequest{
-		Id:                   "its_working",
-		EventTag:             "menne",
-		Email:                "menne@menne.com",
-		Name:                 "menne",
-		Password:             "menne_token_test",
-	}
-	r, err := c.AddTeam(ctx, &addTeam)
+	//addTeam := pb.AddTeamRequest{
+	//	Id:                   "its_working",
+	//	EventTag:             "menne",
+	//	Email:                "menne@menne.com",
+	//	Name:                 "menne",
+	//	Password:             "menne_token_test",
+	//}
+	//r, err := c.AddTeam(ctx, &addTeam)
 
 	//r, err := c.UpdateTeamSolvedChallenge(ctx, &pb.UpdateTeamSolvedChallengeRequest{
 	//	TeamId:               "menne2",
 	//	Tag:                  "prova",
 	//	CompletedAt:          "prova time",
 	//})
-	//r, err := c.GetEvents(ctx, &pb.EmptyRequest{})
+	r, err := c.GetEventTeams(ctx, &pb.GetEventTeamsRequest{EventTag:"merlo"})
 	if err != nil{
 		log.Fatalf("could not greet: %v", err)
 	}
 	if r.ErrorMessage != ""{
 		log.Fatalf("my could not greet: %v", r.ErrorMessage)
 	}
-	log.Println(r.Message)
-	//for _, e := range r.Message{
-	//	log.Printf(e.Id)
-	//}
+	//log.Println(r.Message)
+	for _, e := range r.Teams{
+		fmt.Println(e)
+	}
 }

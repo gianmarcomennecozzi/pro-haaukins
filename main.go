@@ -73,6 +73,7 @@ func (s server) GetEventTeams(ctx context.Context,in *pb.GetEventTeamsRequest) (
 			Id:                   t.Id,
 			Email:                t.Email,
 			Name:                 t.Name,
+			HashPassword:         t.Password,
 			CreatedAt:            t.CreatedAt,
 			LastAccess:           t.LastAccess,
 			SolvedChallenges:     t.SolvedChallenges,

@@ -8,10 +8,10 @@ import (
 	"github.com/gianmarcomennecozzi/pro-haaukins/model"
 	pb "github.com/gianmarcomennecozzi/pro-haaukins/proto"
 	"log"
-	"os"
 	"strconv"
 	"sync"
 	"time"
+	"os"
 )
 
 
